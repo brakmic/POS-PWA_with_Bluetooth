@@ -1,0 +1,30 @@
+.product-filters h3 {
+  margin-top: 0;
+  margin-bottom: 16px;
+  font-size: 1.1rem;
+  color: #2c3e50;
+}
+
+.category-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.category-item {
+  padding: 8px 12px;
+  margin-bottom: 4px;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: background-color 0.2s;
+}
+
+.category-item:hover {
+  background-color: #f0f0f0;
+}
+
+.category-item.active {
+  background-color: #3498db;
+  color: white;
+  font-weight: 500;
+}

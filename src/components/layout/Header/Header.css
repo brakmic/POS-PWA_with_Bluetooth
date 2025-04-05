@@ -1,0 +1,88 @@
+.app-header {
+  background-color: white;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  padding: 0 24px;
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.logo a {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #2c3e50;
+  text-decoration: none;
+}
+
+.main-nav ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  gap: 24px;
+}
+
+.main-nav li a {
+  text-decoration: none;
+  color: #7f8c8d;
+  font-weight: 500;
+  padding: 8px 0;
+  transition: color 0.2s;
+}
+
+.main-nav li.active a {
+  color: #3498db;
+  border-bottom: 2px solid #3498db;
+}
+
+.main-nav li a:hover {
+  color: #3498db;
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+}
+
+.connection-indicator {
+  display: flex;
+  align-items: center;
+  margin-right: 16px;
+  font-size: 0.8rem;
+  color: #7f8c8d;
+}
+
+.status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  margin-right: 6px;
+}
+
+.status-dot.online {
+  background-color: #2ecc71;
+}
+
+.status-dot.offline {
+  background-color: #e74c3c;
+}
+
+@media (max-width: 768px) {
+  .app-header {
+    padding: 0 16px;
+  }
+
+  .connection-indicator .status-text {
+    display: none;
+  }
+}
+
+@media (max-width: 600px) {
+  .main-nav {
+    display: none;
+  }
+}

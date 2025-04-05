@@ -1,0 +1,29 @@
+.network-status {
+  display: flex;
+  align-items: center;
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-size: 0.85rem;
+  gap: 6px;
+  color: white;
+}
+
+.network-status.online.wlan {
+  background-color: #38b000;
+}
+
+.network-status.online.bluetooth {
+  background-color: #3a86ff;
+}
+
+.network-status.offline {
+  background-color: #d90429;
+}
+
+.network-status-icon {
+  font-size: 1.1rem;
+}
+
+.network-status-label {
+  font-weight: 500;
+}

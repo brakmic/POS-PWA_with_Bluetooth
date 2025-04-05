@@ -1,0 +1,68 @@
+.bluetooth-device-info {
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  padding: 1rem;
+  margin: 1rem 0;
+}
+
+.bluetooth-device-info h3 {
+  margin-top: 0;
+  border-bottom: 1px solid #dee2e6;
+  padding-bottom: 0.5rem;
+  margin-bottom: 1rem;
+  color: #212529;
+}
+
+.device-info-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+}
+
+@media (min-width: 768px) {
+  .device-info-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.info-group {
+  margin-bottom: 1rem;
+}
+
+.info-group h4 {
+  margin-top: 0;
+  color: #495057;
+  font-size: 1rem;
+  margin-bottom: 0.75rem;
+}
+
+.info-row {
+  display: flex;
+  margin-bottom: 0.5rem;
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+.info-label {
+  font-weight: 600;
+  min-width: 150px;
+  color: #495057;
+}
+
+.info-value {
+  color: #212529;
+  word-break: break-all;
+}
+
+.info-value.uuid {
+  font-family: monospace;
+  font-size: 0.85rem;
+  background-color: #e9ecef;
+  padding: 0.15rem 0.3rem;
+  border-radius: 3px;
+}
+
+.status-connected {
+  color: #198754;
+  font-weight: 600;
+}

@@ -1,0 +1,3 @@
+[console_scripts]
+pos-proxy = src.bluetooth_gatt_server:main
+

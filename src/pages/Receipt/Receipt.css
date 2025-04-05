@@ -1,0 +1,130 @@
+.receipt-page {
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.receipt-container {
+  width: 100%;
+  max-width: 600px;
+  background-color: white;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 2rem;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+.receipt-header {
+  text-align: center;
+  border-bottom: 2px dashed #ddd;
+  padding-bottom: 1rem;
+  margin-bottom: 1rem;
+}
+
+.receipt-header h1 {
+  font-size: 1.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.date {
+  color: #666;
+}
+
+.receipt-details {
+  margin-bottom: 2rem;
+}
+
+.receipt-info-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid #eee;
+}
+
+.receipt-items h2 {
+  margin-bottom: 1rem;
+}
+
+.receipt-items table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.receipt-items th,
+.receipt-items td {
+  padding: 0.75rem;
+  text-align: left;
+  border-bottom: 1px solid #eee;
+}
+
+.receipt-items th {
+  font-weight: 600;
+  border-bottom: 2px solid #ddd;
+}
+
+.total-row {
+  font-weight: bold;
+  border-top: 2px solid #ddd;
+}
+
+.receipt-footer {
+  margin-top: 2rem;
+  text-align: center;
+  border-top: 2px dashed #ddd;
+  padding-top: 1rem;
+}
+
+.receipt-actions {
+  display: flex;
+  justify-content: center;
+  margin-top: 2rem;
+  gap: 1rem;
+}
+
+.print-btn,
+.new-order-btn {
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.print-btn {
+  background-color: #4caf50;
+  color: white;
+}
+
+.new-order-btn {
+  background-color: #2196f3;
+  color: white;
+}
+
+.status-pending {
+  color: #ff9800;
+}
+
+.status-completed {
+  color: #4caf50;
+}
+
+.status-cancelled {
+  color: #f44336;
+}
+
+.status-refunded {
+  color: #9c27b0;
+}
+
+/* Print styles */
+@media print {
+  .receipt-actions {
+    display: none;
+  }
+
+  .receipt-container {
+    box-shadow: none;
+    border: none;
+  }
+}

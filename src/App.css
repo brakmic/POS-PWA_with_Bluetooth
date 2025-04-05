@@ -1,38 +1,149 @@
-.App {
-  text-align: center;
+.css * {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell,
+    'Open Sans', 'Helvetica Neue', sans-serif;
+  background-color: #f5f7fa;
+  color: #333;
+  line-height: 1.5;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+a {
+  color: #1976d2;
+  text-decoration: none;
 }
 
-.App-header {
-  background-color: #282c34;
+a:hover {
+  text-decoration: underline;
+}
+
+.app-container {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
+}
+
+.main-content {
+  flex: 1;
+  padding-top: 60px;
+  /* Account for fixed navbar if you have one */
+}
+
+.navbar {
+  background-color: #1976d2;
   color: white;
+  height: 60px;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 24px;
 }
 
-.App-link {
-  color: #61dafb;
+.navbar-brand {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: white;
+  text-decoration: none;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.navbar-nav {
+  display: flex;
+  list-style: none;
+}
+
+.nav-item {
+  margin-left: 20px;
+}
+
+.nav-link {
+  color: white;
+  text-decoration: none;
+  font-weight: 500;
+  transition: opacity 0.2s;
+}
+
+.nav-link:hover {
+  opacity: 0.9;
+  text-decoration: none;
+}
+
+.footer {
+  background-color: #f1f1f1;
+  padding: 16px 24px;
+  text-align: center;
+  font-size: 0.9rem;
+  color: #666;
+}
+
+/* Utility classes */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.loading-spinner {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100px;
+}
+
+.alert {
+  padding: 12px 16px;
+  border-radius: 4px;
+  margin-bottom: 16px;
+}
+
+.alert-error {
+  background-color: #ffebee;
+  color: #c62828;
+  border-left: 4px solid #f44336;
+}
+
+.alert-success {
+  background-color: #e8f5e9;
+  color: #2e7d32;
+  border-left: 4px solid #4caf50;
+}
+
+.alert-info {
+  background-color: #e3f2fd;
+  color: #0d47a1;
+  border-left: 4px solid #2196f3;
+}
+
+/* Form styling */
+.form-group {
+  margin-bottom: 16px;
+}
+
+.form-label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 500;
+}
+
+.form-control {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 1rem;
+}
+
+.form-control:focus {
+  border-color: #1976d2;
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(25, 118, 210, 0.2);
 }

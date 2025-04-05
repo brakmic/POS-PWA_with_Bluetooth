@@ -1,0 +1,7 @@
+setup.py
+pos_bluetooth_proxy.egg-info/PKG-INFO
+pos_bluetooth_proxy.egg-info/SOURCES.txt
+pos_bluetooth_proxy.egg-info/dependency_links.txt
+pos_bluetooth_proxy.egg-info/entry_points.txt
+pos_bluetooth_proxy.egg-info/requires.txt
+pos_bluetooth_proxy.egg-info/top_level.txt

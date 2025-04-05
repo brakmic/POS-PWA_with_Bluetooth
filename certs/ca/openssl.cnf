@@ -1,0 +1,11 @@
+[req]
+distinguished_name = req_distinguished_name
+prompt = no
+x509_extensions = v3_ca
+
+[req_distinguished_name]
+CN = POS Development CA
+
+[v3_ca]
+basicConstraints = critical, CA:TRUE
+keyUsage = critical, digitalSignature, keyCertSign, cRLSign

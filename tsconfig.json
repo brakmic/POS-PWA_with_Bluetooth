@@ -1,13 +1,16 @@
 {
   "compilerOptions": {
-    "target": "es5",
+    "target": "es2020",
     "lib": [
       "dom",
       "dom.iterable",
-      "esnext"
+      "esnext",
+      "webworker"
     ],
     "allowJs": true,
     "skipLibCheck": true,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
     "strict": true,
@@ -18,9 +21,41 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
-    "jsx": "react-jsx"
+    "jsx": "react-jsx",
+    "baseUrl": "src",
+    "paths": {
+      "@components/*": [
+        "components/*"
+      ],
+      "@contexts/*": [
+        "contexts/*"
+      ],
+      "@hooks/*": [
+        "hooks/*"
+      ],
+      "@pages/*": [
+        "pages/*"
+      ],
+      "@services/*": [
+        "services/*"
+      ],
+      "@utils/*": [
+        "utils/*"
+      ],
+      "@appTypes/*": [
+        "types/*"
+      ],
+      "@assets/*": [
+        "assets/*"
+      ]
+    }
   },
   "include": [
-    "src"
+    "src",
+    "public/service-worker.js"
+  ],
+  "exclude": [
+    "node_modules",
+    "build"
   ]
 }

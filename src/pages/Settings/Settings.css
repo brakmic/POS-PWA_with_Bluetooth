@@ -1,0 +1,108 @@
+.settings-page {
+  padding: 1.5rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.settings-section {
+  background: white;
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.settings-section h2 {
+  margin-top: 0;
+  margin-bottom: 1.5rem;
+  color: #333;
+  font-size: 1.4rem;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 0.75rem;
+}
+
+.status-item {
+  display: flex;
+  margin-bottom: 1rem;
+  align-items: center;
+}
+
+.status-label {
+  font-weight: 600;
+  min-width: 150px;
+}
+
+.status-value {
+  display: inline-flex;
+  align-items: center;
+}
+
+.status-value.online {
+  color: #28a745;
+}
+
+.status-value.offline {
+  color: #dc3545;
+}
+
+.status-value.connected {
+  color: #28a745;
+}
+
+.status-value.disconnected {
+  color: #dc3545;
+}
+
+.device-info {
+  background-color: #f8f9fa;
+  border-radius: 6px;
+  padding: 1rem;
+  margin: 1rem 0;
+}
+
+.error-message {
+  background-color: #f8d7da;
+  color: #721c24;
+  padding: 0.75rem;
+  border-radius: 4px;
+  margin: 1rem 0;
+}
+
+.button-group {
+  margin-top: 1.5rem;
+  display: flex;
+  gap: 1rem;
+}
+
+.primary-button {
+  background-color: #0d6efd;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 0.5rem 1rem;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+.primary-button:disabled {
+  background-color: #6c757d;
+  cursor: not-allowed;
+}
+
+.primary-button:hover:not(:disabled) {
+  background-color: #0b5ed7;
+}
+
+.secondary-button {
+  background-color: #6c757d;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 0.5rem 1rem;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+.secondary-button:hover {
+  background-color: #5a6268;
+}
