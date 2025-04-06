@@ -6,6 +6,7 @@ import type {
   BluetoothServiceInterface,
   ApiServiceInterface,
   CacheManagerInterface,
+  VatServiceInterface,
 } from '../services/inversify/interfaces';
 
 export function useNetworkManagerDirect(): NetworkManagerInterface {
@@ -27,6 +28,11 @@ export function useCacheManagerDirect(): CacheManagerInterface {
   const container = useContext(InversifyContext);
   return container.get<CacheManagerInterface>(SERVICE_IDENTIFIERS.CacheManager);
 }
+
+export const useVatServiceDirect = (): VatServiceInterface => {
+  const container = useContext(InversifyContext);
+  return container.get<VatServiceInterface>(SERVICE_IDENTIFIERS.VatService);
+};
 
 // Generic service hook if needed
 export function useService<T>(identifier: symbol): T {
