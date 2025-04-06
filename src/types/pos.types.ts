@@ -7,6 +7,7 @@ export interface Product {
   category: string;
   sku: string;
   stock: number;
+  vatCategoryId?: string;
 }
 
 export interface CartItem {
