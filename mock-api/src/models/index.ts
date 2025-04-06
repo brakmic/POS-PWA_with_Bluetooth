@@ -31,6 +31,7 @@ export interface OrderItem {
   id?: number;
   orderId: string;
   productId: string;
+  category?: string;
   name: string;
   quantity: number;
   price: number;
@@ -47,6 +48,13 @@ export interface Order {
   paymentMethod: PaymentMethod;
   receiptNumber?: string;
   items?: OrderItem[];
+  subtotal?: number;
+  vatTotal?: number;
+  vatBreakdown?: Array<{
+    rate: number;
+    amount: number;
+    categoryName: string;
+  }>;
 }
 
 export interface ApiResponse<T> {
