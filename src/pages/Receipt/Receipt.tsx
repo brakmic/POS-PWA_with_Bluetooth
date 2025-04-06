@@ -1,7 +1,20 @@
 import React from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { formatCurrency, formatDate } from '@utils/formatters';
+import { formatDate } from '@utils/formatters';
 import './Receipt.css';
+
+interface OrderItem {
+  name: string;
+  quantity: number;
+  price: number;
+  productId: string;
+}
+
+interface VatBreakdownItem {
+  rate: number;
+  amount: number;
+  categoryName: string;
+}
 
 const Receipt: React.FC = () => {
   const location = useLocation();
@@ -24,6 +37,13 @@ const Receipt: React.FC = () => {
 
   const handleNewOrder = () => {
     navigate('/');
+  };
+
+  const formatCurrency = (amount: number) => {
+    return new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency: 'USD',
+    }).format(amount);
   };
 
   return (
@@ -61,7 +81,7 @@ const Receipt: React.FC = () => {
               </tr>
             </thead>
             <tbody>
-              {order.items?.map((item: any, index: any) => (
+              {order.items?.map((item: OrderItem, index: number) => (
                 <tr key={index}>
                   <td>{item.name}</td>
                   <td>{item.quantity}</td>
@@ -77,6 +97,31 @@ const Receipt: React.FC = () => {
               </tr>
             </tfoot>
           </table>
+        </div>
+
+        {/* VAT information section */}
+        <div className="receipt-summary">
+          {/* Show subtotal if available, otherwise fall back to total amount */}
+          <div className="summary-row">
+            <span>Subtotal:</span>
+            <span>{formatCurrency(order.subtotal || order.totalAmount)}</span>
+          </div>
+
+          {/* Display VAT breakdown if available */}
+          {order.vatBreakdown &&
+            order.vatBreakdown.map((vat: VatBreakdownItem, index: number) => (
+              <div className="summary-row vat-row" key={index}>
+                <span>
+                  VAT {(vat.rate * 100).toFixed(0)}% ({vat.categoryName}):
+                </span>
+                <span>{formatCurrency(vat.amount)}</span>
+              </div>
+            ))}
+
+          <div className="summary-row total-row">
+            <span>Total:</span>
+            <span>{formatCurrency(order.totalAmount)}</span>
+          </div>
         </div>
 
         <div className="receipt-footer">
