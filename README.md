@@ -1,4 +1,145 @@
-# Getting Started with Create React App
+# POS PWA Project
+
+This project is a Point of Sale (POS) Progressive Web Application with multiple connectivity options, including direct API access and Bluetooth connectivity through a bridge.
+
+![pos_demo](./assets/gifs/pos_demo.gif)
+
+## Project Structure
+
+```
+pwa/
+├── src/                 # Main React application
+├── mock-api/            # Mock API server with SQLite database
+├── mock-bt-bridge/      # Mock Bluetooth bridge (WebSockets)
+├── raspberry_proxy/     # Raspberry Pi Bluetooth proxy (Python)
+└── certs/               # SSL certificates for development
+```
+
+## System Architecture
+
+```
+┌──────────────────────────────────────────────────┐
+│                  POS PWA (Browser)               │
+│                                                  │
+│  ┌─────────────┐    ┌───────────┐    ┌────────┐  │
+│  │    React    │    │  Service  │    │  Cache │  │
+│  │ Components  │───▶│  Worker   │───▶│ Manager│  │
+│  └─────────────┘    └───────────┘    └────────┘  │
+│           │                │                     │
+└───────────┼────────────────┼─────────────────────┘
+            │                │
+            ▼                ▼
+┌───────────────────┐  ┌────────────────────────┐
+│  Direct HTTP(S)   │  │   Bluetooth Connection │
+│    Connection     │  │                        │
+└─────────┬─────────┘  └──────────┬─────────────┘
+          │                       │
+          ▼                       ▼
+┌────────────────────┐  ┌─────────────────────┐
+│     Mock API       │  │  Mock BT Bridge     │
+│  (or real API)     │◀─┤  (or real device)   │
+└────────────────────┘  └─────────────────────┘
+```
+
+## Available Scripts
+
+### Main Application
+
+In the project directory, you can run:
+
+```bash
+# Standard development mode (HTTP)
+npm start
+
+# Secure development mode (HTTPS)
+npm run start:secure
+```
+
+### Mock API Server
+
+In the mock-api directory:
+
+```bash
+# Start the API server (HTTP)
+npm run dev
+
+# Start the API server with HTTPS
+npm run dev:secure
+
+# Build the API server
+npm run build
+
+# Run the built API server
+npm run start
+```
+
+The API server will be available at:
+- HTTP: http://localhost:5000
+- HTTPS: https://localhost:5000
+- Swagger Documentation: http://localhost:5000/api-docs
+
+### Mock Bluetooth Bridge
+
+In the mock-bt-bridge directory:
+
+```bash
+# Start the BT bridge (WS)
+npm run dev
+
+# Start the BT bridge with secure WebSockets (WSS)
+npm run dev:secure
+
+# Build the BT bridge
+npm run build
+
+# Run the built BT bridge
+npm run start
+```
+
+The Bluetooth Bridge will be available at:
+- WS: ws://localhost:3030
+- WSS: wss://localhost:3030
+
+## Development Environment
+
+You can run the complete development environment with:
+
+```bash
+# Start all services (HTTP/WS)
+./scripts/run-dev-environment.sh
+
+# Start all services with HTTPS/WSS
+./scripts/run-dev-environment.sh secure
+```
+
+## API Documentation
+
+The Mock API includes Swagger documentation available at `/api-docs` when the server is running. This provides interactive documentation for all available endpoints, including:
+
+- Products API (`/api/products`)
+- Categories API (`/api/categories`)
+- Customers API (`/api/customers`)
+- Orders API (`/api/orders`)
+
+You can use the Swagger UI to explore the API and make test requests directly from your browser.
+
+## Network Connectivity Options
+
+The POS application supports three connectivity modes:
+
+1. **WLAN**: Direct API access over HTTP(S)
+2. **Bluetooth**: Connection via Bluetooth bridge to API
+3. **Offline**: Cached data from service worker when no connection is available
+
+The application automatically selects the best connectivity option based on availability.
+
+## Bluetooth Connectivity
+
+The application can connect to a Bluetooth device using the Web Bluetooth API. In development mode, a mock Bluetooth bridge is provided using WebSockets. In production, the application can connect to a real Bluetooth device (like a Raspberry Pi running the included proxy).
+
+---
+
+## Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
