@@ -1,9 +1,18 @@
-import React, { createContext, useContext, useState, useCallback, useRef } from 'react';
+import React, { createContext, useContext, useState, useCallback, useRef, useEffect } from 'react';
 import { Cart, CartItem, Order, Product, Payment } from '@appTypes/pos.types';
 import { useApiService } from '@hooks/useApiService';
+import { useVatServiceDirect } from '@hooks/useService';
+import { VatBreakdownItem } from '../services/vat';
+
+// Include VAT information
+interface EnhancedCart extends Cart {
+  subtotal: number;
+  vatTotal: number;
+  vatBreakdown: VatBreakdownItem[];
+}
 
 interface POSContextValue {
-  cart: Cart;
+  cart: EnhancedCart;
   products: Product[];
   orders: Order[];
   isLoading: boolean;
@@ -17,9 +26,12 @@ interface POSContextValue {
   getOrder: (orderId: string) => Promise<Order | null>;
 }
 
-const initialCart: Cart = {
+const initialCart: EnhancedCart = {
   items: [],
   totalAmount: 0,
+  subtotal: 0,
+  vatTotal: 0,
+  vatBreakdown: [],
 };
 
 /* eslint-disable @typescript-eslint/no-empty-function */
@@ -41,23 +53,50 @@ const POSContext = createContext<POSContextValue>({
 
 export const POSProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const apiService = useApiService();
+  const vatService = useVatServiceDirect();
   // Add a ref to track loading state without triggering re-renders
   const isLoadingRef = useRef(false);
   // Add lastFetch timestamp to prevent duplicate requests
   const lastFetchRef = useRef<number | null>(null);
+  // Create a ref to track products length separately from the state
+  const productsLengthRef = useRef<number>(0);
 
-  const [cart, setCart] = useState<Cart>(initialCart);
+  const [cart, setCart] = useState<EnhancedCart>(initialCart);
   const [products, setProducts] = useState<Product[]>([]);
   const [orders, setOrders] = useState<Order[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
 
-  const calculateTotal = (items: CartItem[]): number => {
-    return items.reduce((total, item) => total + item.product.price * item.quantity, 0);
+  // Add an effect to keep the ref in sync with actual products length
+  useEffect(() => {
+    productsLengthRef.current = products.length;
+  }, [products]);
+
+  /**
+   * Calculate total with VAT for cart items
+   */
+  const calculateTotal = (
+    items: CartItem[]
+  ): {
+    subtotal: number;
+    vatTotal: number;
+    total: number;
+    vatBreakdown: VatBreakdownItem[];
+  } => {
+    const vatSummary = vatService.calculateCartVat(items);
+    return {
+      subtotal: vatSummary.subtotal,
+      vatTotal: vatSummary.vatTotal,
+      total: vatSummary.grandTotal,
+      vatBreakdown: vatSummary.vatBreakdown,
+    };
   };
 
+  /**
+   * Add a product to the cart with VAT calculation
+   */
   const addToCart = (product: Product, quantity = 1) => {
-    setCart((currentCart: Cart) => {
+    setCart((currentCart: EnhancedCart) => {
       const existingItem = currentCart.items.find((item) => item.product.id === product.id);
 
       let updatedItems: CartItem[];
@@ -70,71 +109,110 @@ export const POSProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         updatedItems = [...currentCart.items, { product, quantity }];
       }
 
+      // Calculate totals with VAT
+      const { subtotal, vatTotal, total, vatBreakdown } = calculateTotal(updatedItems);
+
       return {
         items: updatedItems,
-        totalAmount: calculateTotal(updatedItems),
+        totalAmount: total,
+        subtotal,
+        vatTotal,
+        vatBreakdown,
       };
     });
   };
 
+  /**
+   * Remove a product from the cart and recalculate VAT
+   */
   const removeFromCart = (productId: string) => {
-    setCart((currentCart: Cart) => {
+    setCart((currentCart: EnhancedCart) => {
       const updatedItems = currentCart.items.filter((item) => item.product.id !== productId);
 
+      // If cart is empty, return initial state
+      if (updatedItems.length === 0) {
+        return initialCart;
+      }
+
+      // Calculate totals with VAT
+      const { subtotal, vatTotal, total, vatBreakdown } = calculateTotal(updatedItems);
+
       return {
         items: updatedItems,
-        totalAmount: calculateTotal(updatedItems),
+        totalAmount: total,
+        subtotal,
+        vatTotal,
+        vatBreakdown,
       };
     });
   };
 
+  /**
+   * Update quantity of a product in cart and recalculate VAT
+   */
   const updateQuantity = (productId: string, quantity: number) => {
     if (quantity <= 0) {
       removeFromCart(productId);
       return;
     }
 
-    setCart((currentCart: Cart) => {
+    setCart((currentCart: EnhancedCart) => {
       const updatedItems = currentCart.items.map((item) =>
         item.product.id === productId ? { ...item, quantity } : item
       );
 
+      // Calculate totals with VAT
+      const { subtotal, vatTotal, total, vatBreakdown } = calculateTotal(updatedItems);
+
       return {
         items: updatedItems,
-        totalAmount: calculateTotal(updatedItems),
+        totalAmount: total,
+        subtotal,
+        vatTotal,
+        vatBreakdown,
       };
     });
   };
 
+  /**
+   * Clear the cart
+   */
   const clearCart = () => {
     setCart(initialCart);
   };
 
+  /**
+   * Process checkout with VAT calculations
+   */
   const checkout = async (paymentDetails: Payment): Promise<Order | null> => {
     try {
       setIsLoading(true);
       setError(null);
 
-      // Transform cart items to match OrderItem structure
+      // Create base order items
       const orderItems = cart.items.map((item) => ({
         productId: item.product.id,
         name: item.product.name,
+        category: item.product.category,
         quantity: item.quantity,
         price: item.product.price,
       }));
 
-      // Create order data with correct structure
+      // Create order data with VAT information
       const orderData = {
-        totalAmount: cart.totalAmount,
+        items: orderItems,
         status: 'pending' as const,
         timestamp: new Date().toISOString(),
         paymentMethod: paymentDetails.method,
-        items: orderItems,
+        totalAmount: cart.totalAmount,
+        subtotal: cart.subtotal,
+        vatTotal: cart.vatTotal,
+        vatBreakdown: cart.vatBreakdown,
       };
 
-      console.log('Sending order data:', orderData);
+      console.log('Sending order data with VAT:', orderData);
 
-      // Use createOrder method from the hook (which takes the correct parameters)
+      // Create order through API
       const order = await apiService.createOrder(cart.items, cart.totalAmount, paymentDetails);
 
       if (!order) {
@@ -143,8 +221,16 @@ export const POSProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         return null;
       }
 
-      // Add the order to our list
-      setOrders((current) => [...current, order]);
+      // Enhance order with VAT information before saving
+      const enhancedOrder = {
+        ...order,
+        subtotal: cart.subtotal,
+        vatTotal: cart.vatTotal,
+        vatBreakdown: cart.vatBreakdown,
+      };
+
+      // Add the enhanced order to our list
+      setOrders((current) => [...current, enhancedOrder]);
       clearCart();
 
       // Update inventory for each item
@@ -155,7 +241,7 @@ export const POSProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         );
       }
 
-      return order;
+      return enhancedOrder;
     } catch (err) {
       console.error('Checkout process error:', err);
       setError(err instanceof Error ? err.message : 'Checkout failed');
@@ -165,7 +251,7 @@ export const POSProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     }
   };
 
-  // Deduplicated loadProducts with caching
+  // Load products with caching
   const loadProducts = useCallback(
     async (forceRefresh = false): Promise<void> => {
       console.log('loadProducts called, force refresh:', forceRefresh);
@@ -182,7 +268,7 @@ export const POSProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         !forceRefresh &&
         lastFetchRef.current &&
         now - lastFetchRef.current < 30000 &&
-        products.length > 0
+        productsLengthRef.current > 0
       ) {
         console.log(
           'Using cached products, last fetch:',
@@ -205,10 +291,12 @@ export const POSProvider: React.FC<{ children: React.ReactNode }> = ({ children 
           console.error('API error: No products returned');
           setError('Failed to load products');
           setProducts([]);
+          productsLengthRef.current = 0;
         } else {
           const productArray = Array.isArray(productsData) ? productsData : [];
           console.log(`Setting ${productArray.length} products in state`);
           setProducts(productArray);
+          productsLengthRef.current = productArray.length;
           lastFetchRef.current = Date.now();
         }
       } catch (err) {
@@ -218,10 +306,11 @@ export const POSProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       } finally {
         console.log('Finished loading products');
         setIsLoading(false);
+        productsLengthRef.current = 0;
         isLoadingRef.current = false;
       }
     },
-    [apiService, products.length]
+    [apiService, setIsLoading, setProducts, setError]
   );
 
   const getOrder = async (orderId: string): Promise<Order | null> => {
