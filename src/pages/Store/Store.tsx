@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { usePOS } from '@contexts/POSContext';
-import { useNetwork } from '@contexts/NetworkContext';
 import ProductGrid from '@components/store/ProductGrid';
 import ProductFilters from '@components/store/ProductFilters';
 import ProductSearch from '@components/store/ProductSearch';
@@ -8,7 +7,6 @@ import './Store.css';
 
 const Store: React.FC = () => {
   const { products, loadProducts, addToCart, isLoading, error } = usePOS();
-  const { networkState } = useNetwork();
   const [filteredProducts, setFilteredProducts] = useState(products);
   const [searchTerm, setSearchTerm] = useState('');
   const [activeCategory, setActiveCategory] = useState<string>('all');
@@ -16,7 +14,8 @@ const Store: React.FC = () => {
   // Load products on mount
   useEffect(() => {
     loadProducts();
-  }, [loadProducts]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   // Filter products when products, search term or category changes
   useEffect(() => {
