@@ -8,6 +8,7 @@ import type {
   NetworkConfigProviderInterface,
   ApiServiceInterface,
   CacheManagerInterface,
+  VatServiceInterface,
 } from './interfaces';
 import type { ApiServiceOptions } from '../api';
 
@@ -18,6 +19,7 @@ import { NetworkManager } from '../network';
 import { NetworkConfigProvider } from '../network';
 import { ApiService } from '../api';
 import { CacheManager } from '../cache';
+import { VatService } from '../vat';
 import { API_CONFIG } from '../api';
 import { POS_SERVICE_CONFIG } from '../bluetooth';
 
@@ -71,6 +73,12 @@ export function configureContainer(): Container {
   container
     .bind<CacheManagerInterface>(SERVICE_IDENTIFIERS.CacheManager)
     .to(CacheManager)
+    .inSingletonScope();
+
+  // 8. Register VAT Service
+  container
+    .bind<VatServiceInterface>(SERVICE_IDENTIFIERS.VatService)
+    .to(VatService)
     .inSingletonScope();
 
   return container;

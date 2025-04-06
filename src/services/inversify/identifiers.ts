@@ -6,4 +6,5 @@ export const SERVICE_IDENTIFIERS = {
   CacheManager: Symbol.for('CacheManager'),
   ApiConfig: Symbol.for('ApiConfig'),
   BluetoothConfig: Symbol.for('BluetoothConfig'),
+  VatService: Symbol.for('VatService'),
 };
